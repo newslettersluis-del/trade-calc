@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Calc</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080c10;
+    --panel: #0d1520;
+    --border: #1a2e45;
+    --green: #00e676;
+    --red: #ff1744;
+    --blue: #00b0ff;
+    --text: #c8d8e8;
+    --dim: #4a6070;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,176,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,176,255,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #fff;
+  }
+
+  .header h1 span { color: var(--blue); }
+
+  .header .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 6px var(--blue);
+  }
+
+  /* Card */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: 0.5;
+  }
+
+  /* Input row */
+  .input-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: flex-end;
+  }
+
+  .input-block { flex: 1; }
+
+  .lbl {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  .input-wrap { position: relative; }
+
+  .input-wrap .pre {
+    position: absolute;
+    left: 8px; top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    pointer-events: none;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: #fff;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    padding: 7px 8px 7px 20px;
+    outline: none;
+    transition: border-color 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+
+  input[type="number"]:focus { border-color: var(--blue); }
+  input[type="number"]::placeholder { color: var(--dim); }
+
+  /* Toggle buttons */
+  .toggle-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .toggle-btn {
+    padding: 7px 6px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #060a10;
+    color: var(--dim);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .toggle-btn:hover { border-color: #2a4060; color: var(--text); }
+  .toggle-btn.long.active  { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.07); box-shadow: 0 0 10px #00e67630; }
+  .toggle-btn.short.active { border-color: var(--red);   color: var(--red);   background: rgba(255,23,68,0.07);  box-shadow: 0 0 10px #ff174430; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 10px 0; }
+
+  /* Status */
+  .status {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--dim);
+    margin-bottom: 8px;
+  }
+
+  /* Results */
+  .results {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+  }
+
+  .results.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  .result-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .result-row.tp { border-color: rgba(0,230,118,0.3); box-shadow: 0 0 10px #00e67630; }
+  .result-row.sl { border-color: rgba(255,23,68,0.3);  box-shadow: 0 0 10px #ff174430; }
+
+  .r-left { display: flex; flex-direction: column; gap: 1px; }
+
+  .r-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 2px;
+    color: var(--dim);
+  }
+
+  .r-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+  .result-row.tp .r-title { color: var(--green); }
+  .result-row.sl .r-title { color: var(--red); }
+
+  .r-right { display: flex; align-items: center; gap: 5px; }
+
+  .r-value {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 15px;
+    color: #fff;
+  }
+
+  .r-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
+  .result-row.tp .r-badge { background: rgba(0,230,118,0.12); color: var(--green); }
+  .result-row.sl .r-badge { background: rgba(255,23,68,0.12);  color: var(--red); }
+
+  .copy-btn {
+    background: #0d1520;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+
+  .copy-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+  .result-row.sl .copy-btn.copied { border-color: var(--red); color: var(--red); }
+
+  .rr-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 2px;
+  }
+
+  .rr-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
+
+  .rr-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    color: var(--dim);
+    letter-spacing: 2px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    color: var(--dim);
+    letter-spacing: 1px;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .scanning { animation: pulse 1.5s infinite; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="dot"></div>
+    <h1>TRADE <span>CALC</span></h1>
+    <div class="dot"></div>
+  </div>
+
+  <div class="card">
+
+    <div class="input-row">
+      <div class="input-block">
+        <span class="lbl">PRECIO ENTRADA</span>
+        <div class="input-wrap">
+          <span class="pre">$</span>
+          <input type="number" id="entryPrice" placeholder="0.00" step="any" min="0" />
+        </div>
+      </div>
+    </div>
+
+    <span class="lbl">DIRECCION</span>
+    <div class="toggle-group">
+      <button class="toggle-btn long" id="btnLong" onclick="setDirection('long')">
+        &#9650; LONG
+      </button>
+      <button class="toggle-btn short" id="btnShort" onclick="setDirection('short')">
+        &#9660; SHORT
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="status scanning" id="statusLabel">Esperando datos...</div>
+
+    <div class="results" id="results">
+      <div class="result-row tp">
+        <div class="r-left">
+          <span class="r-name">TAKE PROFIT</span>
+          <span class="r-title">TP &mdash; 1.5R</span>
+        </div>
+        <div class="r-right">
+          <span class="r-value" id="tpValue">--</span>
+          <span class="r-badge" id="tpDiff">--</span>
+          <button class="copy-btn" id="copyTp" onclick="copyValue('tp')" style="display:none">COPIAR</button>
+        </div>
+      </div>
+
+      <div class="rr-row">
+        <div class="rr-dot"></div>
+        <div class="rr-text">RR 1:1.5</div>
+        <div class="rr-dot"></div>
+      </div>
+
+      <div class="result-row sl">
+        <div class="r-left">
+          <span class="r-name">STOP LOSS</span>
+          <span class="r-title">SL &mdash; 2%</span>
+        </div>
+        <div class="r-right">
+          <span class="r-value" id="slValue">--</span>
+          <span class="r-badge" id="slDiff">--</span>
+          <button class="copy-btn" id="copySl" onclick="copyValue('sl')" style="display:none">COPIAR</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">SL 2% &nbsp;|&nbsp; TP 3% &nbsp;|&nbsp; RR 1:1.5</div>
+
+</div>
+
+<script>
+  var direction = null;
+
+  function setDirection(dir) {
+    direction = dir;
+    document.getElementById('btnLong').classList.toggle('active', dir === 'long');
+    document.getElementById('btnShort').classList.toggle('active', dir === 'short');
+    calculate();
+  }
+
+  function fmt(n) {
+    if (n >= 1000) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (n >= 1) return n.toFixed(4);
+    return n.toFixed(6);
+  }
+
+  function calculate() {
+    var entry = parseFloat(document.getElementById('entryPrice').value);
+    var resultsEl = document.getElementById('results');
+    var label = document.getElementById('statusLabel');
+
+    if (!entry || entry <= 0 || !direction) {
+      resultsEl.classList.remove('visible');
+      label.textContent = 'Esperando datos...';
+      label.classList.add('scanning');
+      return;
+    }
+
+    var slPct = 0.02;
+    var tpPct = slPct * 1.5;
+    var sl, tp;
+
+    if (direction === 'long') {
+      sl = entry * (1 - slPct);
+      tp = entry * (1 + tpPct);
+    } else {
+      sl = entry * (1 + slPct);
+      tp = entry * (1 - tpPct);
+    }
+
+    document.getElementById('tpValue').textContent = '$' + fmt(tp);
+    document.getElementById('slValue').textContent = '$' + fmt(sl);
+    document.getElementById('tpDiff').textContent = (direction === 'long' ? '+' : '-') + fmt(Math.abs(tp - entry));
+    document.getElementById('slDiff').textContent = (direction === 'long' ? '-' : '+') + fmt(Math.abs(sl - entry));
+
+    // Store raw values for copying
+    document.getElementById('copyTp').dataset.val = tp.toFixed(2);
+    document.getElementById('copySl').dataset.val = sl.toFixed(2);
+    document.getElementById('copyTp').style.display = 'inline-block';
+    document.getElementById('copySl').style.display = 'inline-block';
+
+    label.textContent = 'Niveles calculados';
+    label.classList.remove('scanning');
+    resultsEl.classList.add('visible');
+  }
+
+  document.getElementById('entryPrice').addEventListener('input', calculate);
+
+  function copyValue(type) {
+    var btn = document.getElementById(type === 'tp' ? 'copyTp' : 'copySl');
+    var val = btn.dataset.val;
+    navigator.clipboard.writeText(val).then(function() {
+      btn.textContent = 'OK!';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'COPIAR';
+        btn.classList.remove('copied');
+      }, 1500);
+    });
+  }
+</script>
+</body>
+</html>
