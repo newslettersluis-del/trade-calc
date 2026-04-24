@@ -291,6 +291,77 @@
   }
 
   .scanning { animation: pulse 1.5s infinite; }
+
+  /* Balance section */
+  .balance-section {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .balance-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    align-items: end;
+  }
+
+  .risk-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .risk-btn {
+    padding: 5px 2px;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    background: #060a10;
+    color: var(--dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .risk-btn:hover { border-color: #2a4060; color: var(--text); }
+  .risk-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(0,176,255,0.08); box-shadow: 0 0 8px rgba(0,176,255,0.2); }
+
+  .risk-result-box {
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    min-height: 52px;
+  }
+
+  .risk-result-box.visible { display: flex; }
+
+  .risk-result-box .rr-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--dim);
+  }
+
+  .risk-result-box .rr-amount {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 16px;
+    color: var(--blue);
+    margin-top: 2px;
+  }
+
+  .risk-result-box .rr-pct {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 8px;
+    color: var(--dim);
+  }
 </style>
 </head>
 <body>
@@ -304,6 +375,32 @@
   </div>
 
   <div class="card">
+
+    <!-- Balance + Risk -->
+    <div class="balance-section">
+      <div class="balance-row">
+        <div>
+          <span class="lbl">BALANCE</span>
+          <div class="input-wrap">
+            <span class="pre">$</span>
+            <input type="number" id="balance" placeholder="0.00" step="any" min="0" />
+          </div>
+          <span class="lbl" style="margin-top:6px;">RIESGO</span>
+          <div class="risk-grid">
+            <button class="risk-btn" onclick="selectRisk(1)">1%</button>
+            <button class="risk-btn" onclick="selectRisk(2)">2%</button>
+            <button class="risk-btn" onclick="selectRisk(3)">3%</button>
+            <button class="risk-btn" onclick="selectRisk(4)">4%</button>
+            <button class="risk-btn" onclick="selectRisk(5)">5%</button>
+          </div>
+        </div>
+        <div class="risk-result-box" id="riskResult">
+          <div class="rr-label" id="riskPctLabel">RIESGO 1%</div>
+          <div class="rr-amount" id="riskAmount">$0.00</div>
+          <div class="rr-pct">del balance</div>
+        </div>
+      </div>
+    </div>
 
     <div class="input-row">
       <div class="input-block">
@@ -424,6 +521,32 @@
   }
 
   document.getElementById('entryPrice').addEventListener('input', calculate);
+  document.getElementById('balance').addEventListener('input', calcRisk);
+
+  var selectedRisk = null;
+
+  function selectRisk(pct) {
+    selectedRisk = pct;
+    document.querySelectorAll('.risk-btn').forEach(function(b, i) {
+      b.classList.toggle('active', i + 1 === pct);
+    });
+    calcRisk();
+  }
+
+  function calcRisk() {
+    var balance = parseFloat(document.getElementById('balance').value);
+    var resultEl = document.getElementById('riskResult');
+
+    if (!balance || balance <= 0 || !selectedRisk) {
+      resultEl.classList.remove('visible');
+      return;
+    }
+
+    var amount = balance * (selectedRisk / 100);
+    document.getElementById('riskPctLabel').textContent = 'RIESGO ' + selectedRisk + '%';
+    document.getElementById('riskAmount').textContent = '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    resultEl.classList.add('visible');
+  }
 
   function copyValue(type) {
     var btn = document.getElementById(type === 'tp' ? 'copyTp' : 'copySl');
