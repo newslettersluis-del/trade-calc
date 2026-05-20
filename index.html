@@ -25,7 +25,7 @@
     font-family: 'Rajdhani', sans-serif;
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     padding: 10px;
   }
@@ -58,21 +58,34 @@
     margin-bottom: 10px;
   }
 
-  .header h1 {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: #fff;
-  }
-
+  .header h1 { font-size: 18px; font-weight: 700; letter-spacing: 3px; color: #fff; }
   .header h1 span { color: var(--blue); }
+  .header .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); box-shadow: 0 0 6px var(--blue); }
 
-  .header .dot {
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--blue);
-    box-shadow: 0 0 6px var(--blue);
+  /* Tabs */
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 8px;
   }
+
+  .tab-btn {
+    padding: 7px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: #060a10;
+    color: var(--dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+
+  .tab-btn:hover { border-color: #2a4060; color: var(--text); }
+  .tab-btn.active { border-color: var(--blue); color: var(--blue); background: rgba(0,176,255,0.07); box-shadow: 0 0 8px rgba(0,176,255,0.15); }
 
   /* Card */
   .card {
@@ -93,16 +106,11 @@
     opacity: 0.5;
   }
 
-  /* Input row */
-  .input-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: flex-end;
-  }
+  /* Panels */
+  .panel { display: none; }
+  .panel.active { display: block; }
 
-  .input-block { flex: 1; }
-
+  /* Labels & inputs */
   .lbl {
     font-family: 'Share Tech Mono', monospace;
     font-size: 8px;
@@ -112,7 +120,7 @@
     display: block;
   }
 
-  .input-wrap { position: relative; }
+  .input-wrap { position: relative; margin-bottom: 8px; }
 
   .input-wrap .pre {
     position: absolute;
@@ -140,16 +148,11 @@
 
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-
   input[type="number"]:focus { border-color: var(--blue); }
   input[type="number"]::placeholder { color: var(--dim); }
 
-  /* Toggle buttons */
-  .toggle-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px;
-  }
+  /* Direction toggle */
+  .toggle-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
 
   .toggle-btn {
     padding: 7px 6px;
@@ -170,10 +173,8 @@
   .toggle-btn.long.active  { border-color: var(--green); color: var(--green); background: rgba(0,230,118,0.07); box-shadow: 0 0 10px #00e67630; }
   .toggle-btn.short.active { border-color: var(--red);   color: var(--red);   background: rgba(255,23,68,0.07);  box-shadow: 0 0 10px #ff174430; }
 
-  /* Divider */
   .divider { height: 1px; background: var(--border); margin: 10px 0; }
 
-  /* Status */
   .status {
     font-family: 'Share Tech Mono', monospace;
     font-size: 8px;
@@ -182,7 +183,7 @@
     margin-bottom: 8px;
   }
 
-  /* Results */
+  /* TP/SL results */
   .results {
     display: flex;
     flex-direction: column;
@@ -211,32 +212,16 @@
 
   .r-left { display: flex; flex-direction: column; gap: 1px; }
 
-  .r-name {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 7px;
-    letter-spacing: 2px;
-    color: var(--dim);
-  }
-
+  .r-name { font-family: 'Share Tech Mono', monospace; font-size: 7px; letter-spacing: 2px; color: var(--dim); }
   .r-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; }
   .result-row.tp .r-title { color: var(--green); }
   .result-row.sl .r-title { color: var(--red); }
 
   .r-right { display: flex; align-items: center; gap: 5px; }
 
-  .r-value {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 15px;
-    color: #fff;
-  }
+  .r-value { font-family: 'Share Tech Mono', monospace; font-size: 15px; color: #fff; }
 
-  .r-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    padding: 2px 5px;
-    border-radius: 3px;
-  }
-
+  .r-badge { font-family: 'Share Tech Mono', monospace; font-size: 9px; padding: 2px 5px; border-radius: 3px; }
   .result-row.tp .r-badge { background: rgba(0,230,118,0.12); color: var(--green); }
   .result-row.sl .r-badge { background: rgba(255,23,68,0.12);  color: var(--red); }
 
@@ -245,73 +230,28 @@
     border: 1px solid var(--border);
     border-radius: 4px;
     color: var(--dim);
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 1px;
-    padding: 3px 7px;
+    font-size: 11px;
+    padding: 2px 6px;
     cursor: pointer;
     transition: all 0.15s;
     white-space: nowrap;
+    line-height: 1;
   }
 
   .copy-btn:hover { border-color: var(--blue); color: var(--blue); }
   .copy-btn.copied { border-color: var(--green); color: var(--green); }
   .result-row.sl .copy-btn.copied { border-color: var(--red); color: var(--red); }
 
-  .rr-row {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    padding: 2px;
-  }
-
+  .rr-row { display: flex; justify-content: center; align-items: center; gap: 8px; padding: 2px; }
   .rr-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); }
-
-  .rr-text {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
-    color: var(--dim);
-    letter-spacing: 2px;
-  }
-
-  /* Footer */
-  .footer {
-    text-align: center;
-    margin-top: 8px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
-    color: var(--dim);
-    letter-spacing: 1px;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.35; }
-  }
-
-  .scanning { animation: pulse 1.5s infinite; }
+  .rr-text { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: var(--dim); letter-spacing: 2px; }
 
   /* Balance section */
-  .balance-section {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
+  .balance-section { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 
-  .balance-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    align-items: end;
-  }
+  .balance-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: end; }
 
-  .risk-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    margin-top: 8px;
-  }
+  .risk-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-top: 6px; }
 
   .risk-btn {
     padding: 5px 2px;
@@ -342,26 +282,95 @@
   }
 
   .risk-result-box.visible { display: flex; }
+  .risk-result-box .rr-label { font-family: 'Share Tech Mono', monospace; font-size: 8px; letter-spacing: 2px; color: var(--dim); }
+  .risk-result-box .rr-amount { font-family: 'Share Tech Mono', monospace; font-size: 16px; color: var(--blue); margin-top: 2px; }
+  .risk-result-box .rr-pct { font-family: 'Share Tech Mono', monospace; font-size: 8px; color: var(--dim); }
 
-  .risk-result-box .rr-label {
+  /* ── RR LADDER (Tab 2) ── */
+  .rr-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+
+  .rr-dir-group { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+
+  .rr-ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.3s ease;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+
+  .rr-ladder.visible { opacity: 1; transform: translateY(0); }
+
+  .rr-ladder::-webkit-scrollbar { width: 3px; }
+  .rr-ladder::-webkit-scrollbar-track { background: transparent; }
+  .rr-ladder::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .rr-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #060a10;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 10px;
+    transition: border-color 0.2s;
+  }
+
+  .rr-item:hover { border-color: #2a4060; }
+
+  .rr-item .rr-num {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
-    letter-spacing: 2px;
+    font-size: 9px;
     color: var(--dim);
+    min-width: 32px;
   }
 
-  .risk-result-box .rr-amount {
+  .rr-item .rr-price {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 16px;
-    color: var(--blue);
-    margin-top: 2px;
+    font-size: 14px;
+    color: #fff;
   }
 
-  .risk-result-box .rr-pct {
+  .rr-item .rr-gain {
     font-family: 'Share Tech Mono', monospace;
-    font-size: 8px;
+    font-size: 9px;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
+  .rr-copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
     color: var(--dim);
+    font-size: 11px;
+    padding: 1px 5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1;
+    flex-shrink: 0;
   }
+
+  .rr-copy-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .rr-copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+  .rr-item.long-item .rr-gain { background: rgba(0,230,118,0.1); color: var(--green); }
+  .rr-item.short-item .rr-gain { background: rgba(255,23,68,0.1); color: var(--red); }
+
+  .rr-item.long-item { border-left: 2px solid rgba(0,230,118,0.4); }
+  .rr-item.short-item { border-left: 2px solid rgba(255,23,68,0.4); }
+
+  .rr-status { font-family: 'Share Tech Mono', monospace; font-size: 8px; letter-spacing: 2px; color: var(--dim); margin-bottom: 8px; }
+
+  /* Footer */
+  .footer { text-align: center; margin-top: 8px; font-family: 'Share Tech Mono', monospace; font-size: 8px; color: var(--dim); letter-spacing: 1px; }
+
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+  .scanning { animation: pulse 1.5s infinite; }
 </style>
 </head>
 <body>
@@ -374,97 +383,147 @@
     <div class="dot"></div>
   </div>
 
+  <!-- Pestañas -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab1" onclick="switchTab(1)">TP / SL</button>
+    <button class="tab-btn" id="tab2" onclick="switchTab(2)">ESCALERA RR</button>
+  </div>
+
   <div class="card">
 
-    <!-- Balance + Risk -->
-    <div class="balance-section">
-      <div class="balance-row">
+    <!-- ══════════ PESTAÑA 1 ══════════ -->
+    <div class="panel active" id="panel1">
+
+      <!-- Balance -->
+      <div class="balance-section">
+        <div class="balance-row">
+          <div>
+            <span class="lbl">BALANCE</span>
+            <div class="input-wrap">
+              <span class="pre">$</span>
+              <input type="number" id="balance" placeholder="0.00" step="any" min="0" />
+            </div>
+            <span class="lbl" style="margin-top:4px;">RIESGO</span>
+            <div class="risk-grid">
+              <button class="risk-btn" onclick="selectRisk(1)">1%</button>
+              <button class="risk-btn" onclick="selectRisk(2)">2%</button>
+              <button class="risk-btn" onclick="selectRisk(3)">3%</button>
+              <button class="risk-btn" onclick="selectRisk(4)">4%</button>
+              <button class="risk-btn" onclick="selectRisk(5)">5%</button>
+            </div>
+          </div>
+          <div class="risk-result-box" id="riskResult">
+            <div class="rr-label" id="riskPctLabel">RIESGO 1%</div>
+            <div class="rr-amount" id="riskAmount">$0.00</div>
+            <div class="rr-pct">del balance</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entrada -->
+      <span class="lbl">PRECIO ENTRADA</span>
+      <div class="input-wrap">
+        <span class="pre">$</span>
+        <input type="number" id="entryPrice" placeholder="0.00" step="any" min="0" />
+      </div>
+
+      <span class="lbl">DIRECCION</span>
+      <div class="toggle-group">
+        <button class="toggle-btn long" id="btnLong" onclick="setDirection('long')">&#9650; LONG</button>
+        <button class="toggle-btn short" id="btnShort" onclick="setDirection('short')">&#9660; SHORT</button>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="status scanning" id="statusLabel">Esperando datos...</div>
+
+      <div class="results" id="results">
+        <div class="result-row tp">
+          <div class="r-left">
+            <span class="r-name">TAKE PROFIT</span>
+            <span class="r-title">TP &mdash; 1.5R</span>
+          </div>
+          <div class="r-right">
+            <span class="r-value" id="tpValue">--</span>
+            <span class="r-badge" id="tpDiff">--</span>
+            <button class="copy-btn" id="copyTp" onclick="copyValue('tp')" style="display:none">&#10697;</button>
+          </div>
+        </div>
+
+        <div class="rr-row">
+          <div class="rr-dot"></div>
+          <div class="rr-text">RR 1:1.5</div>
+          <div class="rr-dot"></div>
+        </div>
+
+        <div class="result-row sl">
+          <div class="r-left">
+            <span class="r-name">STOP LOSS</span>
+            <span class="r-title">SL &mdash; 2%</span>
+          </div>
+          <div class="r-right">
+            <span class="r-value" id="slValue">--</span>
+            <span class="r-badge" id="slDiff">--</span>
+            <button class="copy-btn" id="copySl" onclick="copyValue('sl')" style="display:none">&#10697;</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panel1 -->
+
+    <!-- ══════════ PESTAÑA 2 ══════════ -->
+    <div class="panel" id="panel2">
+
+      <div class="rr-inputs">
         <div>
-          <span class="lbl">BALANCE</span>
+          <span class="lbl">PRECIO ENTRADA</span>
           <div class="input-wrap">
             <span class="pre">$</span>
-            <input type="number" id="balance" placeholder="0.00" step="any" min="0" />
-          </div>
-          <span class="lbl" style="margin-top:6px;">RIESGO</span>
-          <div class="risk-grid">
-            <button class="risk-btn" onclick="selectRisk(1)">1%</button>
-            <button class="risk-btn" onclick="selectRisk(2)">2%</button>
-            <button class="risk-btn" onclick="selectRisk(3)">3%</button>
-            <button class="risk-btn" onclick="selectRisk(4)">4%</button>
-            <button class="risk-btn" onclick="selectRisk(5)">5%</button>
+            <input type="number" id="rrEntry" placeholder="0.00" step="any" min="0" />
           </div>
         </div>
-        <div class="risk-result-box" id="riskResult">
-          <div class="rr-label" id="riskPctLabel">RIESGO 1%</div>
-          <div class="rr-amount" id="riskAmount">$0.00</div>
-          <div class="rr-pct">del balance</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="input-row">
-      <div class="input-block">
-        <span class="lbl">PRECIO ENTRADA</span>
-        <div class="input-wrap">
-          <span class="pre">$</span>
-          <input type="number" id="entryPrice" placeholder="0.00" step="any" min="0" />
-        </div>
-      </div>
-    </div>
-
-    <span class="lbl">DIRECCION</span>
-    <div class="toggle-group">
-      <button class="toggle-btn long" id="btnLong" onclick="setDirection('long')">
-        &#9650; LONG
-      </button>
-      <button class="toggle-btn short" id="btnShort" onclick="setDirection('short')">
-        &#9660; SHORT
-      </button>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="status scanning" id="statusLabel">Esperando datos...</div>
-
-    <div class="results" id="results">
-      <div class="result-row tp">
-        <div class="r-left">
-          <span class="r-name">TAKE PROFIT</span>
-          <span class="r-title">TP &mdash; 1.5R</span>
-        </div>
-        <div class="r-right">
-          <span class="r-value" id="tpValue">--</span>
-          <span class="r-badge" id="tpDiff">--</span>
-          <button class="copy-btn" id="copyTp" onclick="copyValue('tp')" style="display:none">COPIAR</button>
+        <div>
+          <span class="lbl">STOP LOSS</span>
+          <div class="input-wrap">
+            <span class="pre">$</span>
+            <input type="number" id="rrSL" placeholder="0.00" step="any" min="0" />
+          </div>
         </div>
       </div>
 
-      <div class="rr-row">
-        <div class="rr-dot"></div>
-        <div class="rr-text">RR 1:1.5</div>
-        <div class="rr-dot"></div>
+      <span class="lbl">DIRECCION</span>
+      <div class="rr-dir-group">
+        <button class="toggle-btn long" id="rrBtnLong" onclick="setRRDir('long')">&#9650; LONG</button>
+        <button class="toggle-btn short" id="rrBtnShort" onclick="setRRDir('short')">&#9660; SHORT</button>
       </div>
 
-      <div class="result-row sl">
-        <div class="r-left">
-          <span class="r-name">STOP LOSS</span>
-          <span class="r-title">SL &mdash; 2%</span>
-        </div>
-        <div class="r-right">
-          <span class="r-value" id="slValue">--</span>
-          <span class="r-badge" id="slDiff">--</span>
-          <button class="copy-btn" id="copySl" onclick="copyValue('sl')" style="display:none">COPIAR</button>
-        </div>
-      </div>
-    </div>
+      <div class="divider" style="margin-top:2px;"></div>
+
+      <div class="rr-status scanning" id="rrStatus">Esperando datos...</div>
+
+      <div class="rr-ladder" id="rrLadder"></div>
+
+    </div><!-- /panel2 -->
 
   </div>
 
-  <div class="footer">SL 2% &nbsp;|&nbsp; TP 3% &nbsp;|&nbsp; RR 1:1.5</div>
+  <div class="footer" id="footerText">SL 2% &nbsp;|&nbsp; TP 3% &nbsp;|&nbsp; RR 1:1.5</div>
 
 </div>
 
 <script>
+  // ── TAB SWITCH ──
+  function switchTab(n) {
+    document.getElementById('tab1').classList.toggle('active', n === 1);
+    document.getElementById('tab2').classList.toggle('active', n === 2);
+    document.getElementById('panel1').classList.toggle('active', n === 1);
+    document.getElementById('panel2').classList.toggle('active', n === 2);
+    document.getElementById('footerText').textContent = n === 1
+      ? 'SL 2% | TP 3% | RR 1:1.5'
+      : 'ESCALERA DE RR  |  1R a 15R';
+  }
+
+  // ── TAB 1: TP/SL ──
   var direction = null;
 
   function setDirection(dir) {
@@ -492,24 +551,14 @@
       return;
     }
 
-    var slPct = 0.02;
-    var tpPct = slPct * 1.5;
-    var sl, tp;
-
-    if (direction === 'long') {
-      sl = entry * (1 - slPct);
-      tp = entry * (1 + tpPct);
-    } else {
-      sl = entry * (1 + slPct);
-      tp = entry * (1 - tpPct);
-    }
+    var slPct = 0.02, tpPct = 0.03;
+    var sl = direction === 'long' ? entry * (1 - slPct) : entry * (1 + slPct);
+    var tp = direction === 'long' ? entry * (1 + tpPct) : entry * (1 - tpPct);
 
     document.getElementById('tpValue').textContent = '$' + fmt(tp);
     document.getElementById('slValue').textContent = '$' + fmt(sl);
     document.getElementById('tpDiff').textContent = (direction === 'long' ? '+' : '-') + fmt(Math.abs(tp - entry));
     document.getElementById('slDiff').textContent = (direction === 'long' ? '-' : '+') + fmt(Math.abs(sl - entry));
-
-    // Store raw values for copying
     document.getElementById('copyTp').dataset.val = tp.toFixed(2);
     document.getElementById('copySl').dataset.val = sl.toFixed(2);
     document.getElementById('copyTp').style.display = 'inline-block';
@@ -536,12 +585,7 @@
   function calcRisk() {
     var balance = parseFloat(document.getElementById('balance').value);
     var resultEl = document.getElementById('riskResult');
-
-    if (!balance || balance <= 0 || !selectedRisk) {
-      resultEl.classList.remove('visible');
-      return;
-    }
-
+    if (!balance || balance <= 0 || !selectedRisk) { resultEl.classList.remove('visible'); return; }
     var amount = balance * (selectedRisk / 100);
     document.getElementById('riskPctLabel').textContent = 'RIESGO ' + selectedRisk + '%';
     document.getElementById('riskAmount').textContent = '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -550,16 +594,88 @@
 
   function copyValue(type) {
     var btn = document.getElementById(type === 'tp' ? 'copyTp' : 'copySl');
-    var val = btn.dataset.val;
-    navigator.clipboard.writeText(val).then(function() {
-      btn.textContent = 'OK!';
+    navigator.clipboard.writeText(btn.dataset.val).then(function() {
+      btn.textContent = '✓';
       btn.classList.add('copied');
-      setTimeout(function() {
-        btn.textContent = 'COPIAR';
-        btn.classList.remove('copied');
-      }, 1500);
+      setTimeout(function() { btn.innerHTML = '&#10697;'; btn.classList.remove('copied'); }, 1500);
     });
   }
+
+  function copyRR(btn, val) {
+    navigator.clipboard.writeText(val).then(function() {
+      btn.textContent = '✓';
+      btn.classList.add('copied');
+      setTimeout(function() { btn.innerHTML = '&#10697;'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
+  // ── TAB 2: RR LADDER ──
+  var rrDir = null;
+
+  function setRRDir(dir) {
+    rrDir = dir;
+    document.getElementById('rrBtnLong').classList.toggle('active', dir === 'long');
+    document.getElementById('rrBtnShort').classList.toggle('active', dir === 'short');
+    calcRRLadder();
+  }
+
+  function calcRRLadder() {
+    var entry = parseFloat(document.getElementById('rrEntry').value);
+    var sl    = parseFloat(document.getElementById('rrSL').value);
+    var ladder = document.getElementById('rrLadder');
+    var status = document.getElementById('rrStatus');
+
+    if (!entry || !sl || entry <= 0 || sl <= 0 || !rrDir) {
+      ladder.classList.remove('visible');
+      ladder.innerHTML = '';
+      status.textContent = 'Esperando datos...';
+      status.classList.add('scanning');
+      return;
+    }
+
+    var risk = Math.abs(entry - sl);
+
+    // Validate direction makes sense
+    if (rrDir === 'long' && sl >= entry) {
+      status.textContent = 'SL debe ser menor al precio de entrada en LONG';
+      status.classList.remove('scanning');
+      ladder.classList.remove('visible');
+      return;
+    }
+    if (rrDir === 'short' && sl <= entry) {
+      status.textContent = 'SL debe ser mayor al precio de entrada en SHORT';
+      status.classList.remove('scanning');
+      ladder.classList.remove('visible');
+      return;
+    }
+
+    status.textContent = 'Escalera calculada';
+    status.classList.remove('scanning');
+
+    var html = '';
+    for (var r = 1; r <= 15; r++) {
+      var price = rrDir === 'long'
+        ? entry + (risk * r)
+        : entry - (risk * r);
+
+      var gainPct = ((risk * r) / entry * 100).toFixed(2);
+      var cls = rrDir === 'long' ? 'long-item' : 'short-item';
+      var sign = rrDir === 'long' ? '+' : '-';
+
+      html += '<div class="rr-item ' + cls + '">'
+            +   '<span class="rr-num">' + r + 'R</span>'
+            +   '<span class="rr-price">$' + fmt(price) + '</span>'
+            +   '<span class="rr-gain">' + sign + gainPct + '%</span>'
+            +   '<button class="rr-copy-btn" onclick="copyRR(this, \'' + price.toFixed(2) + '\')">&#10697;</button>'
+            + '</div>';
+    }
+
+    ladder.innerHTML = html;
+    ladder.classList.add('visible');
+  }
+
+  document.getElementById('rrEntry').addEventListener('input', calcRRLadder);
+  document.getElementById('rrSL').addEventListener('input', calcRRLadder);
 </script>
 </body>
 </html>
